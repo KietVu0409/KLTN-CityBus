@@ -1,0 +1,155 @@
+.modal-main {
+    :focus-visible {
+      outline: unset;
+    }
+  
+    // information
+    .container {
+      display: flex;
+      flex-direction: row;
+      min-height: 160px;
+      min-width: 430px;
+      padding: 20px 15px;
+  
+      .icon {
+        border-radius: 50%;
+        height: fit-content;
+        width: fit-content;
+        padding: 5px;
+        background-color: #d3f6ff;
+  
+        .error {
+          display: none;
+        }
+  
+        .information {
+          display: block;
+          fill: #1a89ac;
+        }
+  
+        .confirm {
+          display: none;
+        }
+      }
+  
+      .content {
+        margin-left: 15px;
+        width: 100%;
+  
+        .MuiFormControl-root {
+          width: 100%;
+  
+          .MuiInputBase-root {
+            text-align: center;
+            justify-content: center;
+  
+            .MuiInputBase-input {
+              padding: unset;
+              padding-left: 0.5rem;
+              padding-top: 0.5rem;
+              padding-bottom: 0.5rem;
+            }
+          }
+        }
+  
+        .view-input-discount {
+          display: flex;
+          align-items: center;
+        }
+  
+        .title {
+          align-items: center;
+          justify-content: space-between;
+          display: flex;
+          font-weight: 600;
+          font-size: 1.15rem;
+          position: relative;
+  
+          .close {
+            font-size: 1.4rem;
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            bottom: 5px;
+          }
+        }
+  
+        .description {
+          font-size: 0.9rem;
+        }
+  
+        .action {
+          margin-top: 15px;
+          display: flex;
+          justify-content: flex-end;
+  
+          .cancel-btn {
+            margin-right: 15px;
+            font-weight: bold;
+          }
+  
+          .confirm-btn {
+            width: 6rem;
+            background-color: #1a89ac;
+          }
+        }
+      }
+    }
+  
+    // error
+    .error {
+      .icon {
+        background-color: #ffcdce;
+  
+        .error {
+          display: block;
+          fill: #ff4d4f;
+        }
+  
+        .information {
+          display: none;
+        }
+  
+        .confirm {
+          display: none;
+        }
+      }
+  
+      .content {
+        .action {
+          .confirm-btn {
+            background-color: #ff4d4f;
+          }
+        }
+      }
+    }
+  
+    // confirm
+    .confirm {
+      .icon {
+        background-color: #7dda9480;
+  
+        .error {
+          display: none;
+        }
+  
+        .information {
+          display: none;
+        }
+  
+        .confirm {
+          display: block;
+          fill: #17742e;
+        }
+      }
+  
+      .content {
+        .action {
+          .confirm-btn {
+            background-color: #17742e;
+          }
+        }
+      }
+    }
+  }
+  

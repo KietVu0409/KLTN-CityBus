@@ -1,0 +1,114 @@
+.select-custom {
+    display: flex !important;
+  
+    .MuiInputBase-root {
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 0.275rem 1rem !important;
+      gap: 8px;
+      background: #ffffff;
+      border-radius: 0.4rem !important;
+      flex: none;
+      align-self: stretch;
+      flex-grow: 0;
+      font-weight: 400 !important;
+      height: 2.1875 !important;
+  
+      &:focus-within {
+        .MuiOutlinedInput-notchedOutline {
+          border: 1px solid !important;
+          border-color: #038edb !important;
+        }
+      }
+  
+      &:hover {
+        .MuiOutlinedInput-notchedOutline {
+          border-color: #afafaf !important;
+        }
+  
+        input {
+          &::placeholder {
+            opacity: 1;
+            color: #373737 !important;
+            font-size: 0.875rem;
+          }
+        }
+      }
+  
+      .MuiOutlinedInput-notchedOutline {
+        &:hover {
+          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+          border-radius: 8px;
+          border-color: #afafaf !important;
+        }
+      }
+    }
+  
+    input {
+      height: auto;
+      padding: 0 !important;
+      line-height: 1.52857;
+      font-size: 0.875rem;
+      margin-left: -3px !important;
+    }
+  }
+  .view-image {
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem;
+
+    .image-product {
+      height: 6rem;
+      width: 100%;
+      border: 1px dashed #d7d7d7;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background-color: rgba(229, 229, 229, 0.2);
+      // svg {
+      //   color: #afafaf;
+      //   font-size: 3rem;
+      // }
+    }
+  }
+  .drawer {
+
+    .title-drawer {
+      .btn-close {
+        svg {
+          font-size: 1.3rem !important;
+        }
+      }
+      span {
+        font-size: 1.5rem !important ;
+      }
+    }
+    
+    .footer-drawer {
+      .btn-secondary-disable {
+        font-size: 0.8rem !important;
+        padding: 4px 6px !important;
+      }
+      .btn-primary-disable {
+        font-size: 0.8rem !important;
+        padding: 4px 6px !important;
+      }
+      .btn-tertiary-normal {
+        font-size: 0.8rem !important;
+        padding: 4px 6px !important;
+      }
+    }
+  }
+  
+  
+  // .MuiAutocomplete-popper {
+  //   width: 600px !important;
+  //   background-color: aquamarine !important;
+  //   justify-content: flex-end !important;
+  // }
+  

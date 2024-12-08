@@ -1,0 +1,93 @@
+.order-flex {
+    display: 'flex' !important;
+    justify-content: 'space-between' !important;
+  }
+  .order-custom-title {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    font-family: 'SourceSansPro' !important;
+  }
+  
+  .disabled-field {
+    .MuiInputBase-root {
+      background-color: #edf1f2 !important;
+      .Mui-disabled {
+        .MuiOutlinedInput-notchedOutline {
+          border: red !important;
+        }
+      }
+    }
+  }
+  .order-field-value {
+    font-size: 14px !important;
+    color: #4d4d4d;
+  }
+  .input-detail {
+    display: flex !important;
+    color: #038edb !important;
+  
+    .MuiInputBase-root {
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 0.275rem 1rem !important;
+      gap: 8px;
+      background: #ffffff;
+      border-radius: 0.4rem !important;
+      flex: none;
+      align-self: stretch;
+      flex-grow: 0;
+      font-weight: 400 !important;
+      height: 2.1875 !important;
+  
+      &:hover {
+        .MuiOutlinedInput-notchedOutline {
+          border-color: #afafaf !important;
+        }
+  
+        input {
+          &::placeholder {
+            opacity: 1;
+            font-size: 0.875rem;
+          }
+        }
+      }
+  
+      .MuiOutlinedInput-notchedOutline {
+        &:hover {
+          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+          border-radius: 8px;
+          border-color: #afafaf !important;
+        }
+      }
+  
+      input {
+        padding: 0;
+  
+        &::placeholder {
+          opacity: 1;
+          color: #afafaf;
+          font-size: 0.875rem;
+        }
+      }
+  
+      &.Mui-error {
+        border-color: #d32f2f !important;
+      }
+      &:focus-within {
+        .MuiOutlinedInput-notchedOutline {
+          border: 1px solid !important;
+          border-color: #038edb !important;
+        }
+      }
+    }
+    input {
+      height: auto;
+      padding: 0 !important;
+      line-height: 1.52857;
+      font-size: 0.875rem;
+    }
+  }
+  

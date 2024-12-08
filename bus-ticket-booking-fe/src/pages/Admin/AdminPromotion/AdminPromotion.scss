@@ -1,0 +1,102 @@
+.page-layout {
+    .view-input-discount {
+      display: flex;
+      flex-direction: row;
+    }
+  
+    .MuiTabs-root {
+      min-height: unset;
+      .MuiButtonBase-root {
+        text-transform: none;
+        height: 40px;
+        min-height: unset;
+      }
+      .MuiTabs-scroller {
+        .MuiTabs-indicator {
+          background-color: unset;
+        }
+  
+        .MuiTabs-flexContainer {
+          .MuiButtonBase-root {
+            background-color: #f1f1f1;
+            font-weight: '600';
+          }
+  
+          .Mui-selected {
+            background-color: white;
+            color: black;
+          }
+  
+          .mid-border {
+            border-left: 1px solid #e4e4e4;
+            border-right: 1px solid #e4e4e4;
+            border-top: 1px solid #e4e4e4;
+          }
+  
+          .left-border {
+            border-left: 1px solid #e4e4e4;
+            border-top: 1px solid #e4e4e4;
+            border-right: 1px solid #e4e4e4;
+          }
+  
+          .right-border {
+            border-right: 1px solid #e4e4e4;
+            border-top: 1px solid #e4e4e4;
+          }
+        }
+      }
+    }
+  }
+  .search {
+    display: flex;
+    margin-top: 15px;
+    justify-content: space-between;
+    @media (max-width: 1210px) {
+      display: block;
+    }
+    .date-picker {
+      display: flex !important;
+
+      .MuiOutlinedInput-root {
+        border-radius: 0.4rem !important;
+        padding: 0.05rem 0.4rem !important;
+        .MuiInputAdornment-root {
+          margin-left: -10px;
+        }
+        .MuiOutlinedInput-input {
+          padding: 0.275rem 1rem !important;
+          font-size: 0.875rem;
+          margin-left: -10px !important;
+        }
+        &:hover {
+          .MuiOutlinedInput-notchedOutline {
+            border-color: #afafaf !important;
+          }
+        }
+      }
+    }
+
+    .view-input {
+      margin-right: 0.3rem;
+      background-color: #fff;
+      @media (max-width: 900px) {
+        margin-bottom: 0.3rem;
+      }
+    }
+
+    .view-filter {
+      word-wrap: break-word;
+
+      input {
+        padding: 0.275rem 0.5rem !important;
+      }
+    }
+    .txt-find {
+      font-size: 0.875rem;
+    }
+    .txt-search {
+      margin-top: 4px;
+      right: 0px;
+    }
+  }
+  

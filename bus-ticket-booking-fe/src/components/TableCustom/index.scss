@@ -1,0 +1,72 @@
+.table-custom {
+  .MuiTableHead-root {
+    border: 1px solid #e4e4e4;
+    background-color: rgba(245, 245, 245, 0.5);
+    
+    .MuiTableCell-root {
+      padding: 5px 0 5px 0;
+      color: #000;
+      font-family: "SourceSansPro";
+      height: 50px;
+    }
+  }
+
+  .MuiTableCell-root {
+    border: 1px solid #e4e4e4;
+    color: #666666;
+    img {
+      vertical-align: middle;
+      margin: 5px 0 5px 0;
+    }
+  }
+  .MuiTableBody-root {
+    .MuiTableRow-root:hover {
+      td {
+        color: #000;
+      }
+      .bth-update-detail {
+        color: #fff;
+      }
+    }
+  }
+}
+
+.btn-add-product {
+  border-bottom: 1px solid #d7d7d7;
+  border-left: 1px solid #d7d7d7;
+  border-right: 1px solid #d7d7d7;
+  width: 100%;
+  border-radius: unset;
+  height: 7rem;
+  .view-btn-add {
+    padding-top: 1rem;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    .empty-data {
+      width: 90px;
+      height: 70px;
+    }
+    span {
+      font-size: 12px;
+      color: #afafaf;
+    }
+  }
+}
+// tbody > tr:hover {
+//   background-color: var(--main-color);
+//   color: var(--txt-white);
+// }
+
+.table__pagination-item.active,
+.table__pagination-item.active:hover {
+  background-color: var(--main-color);
+  // color: var(--txt-white);
+  font-weight: 600;
+}
+
+.table__pagination-item:hover {
+  color: var(--txt-white);
+  background-color: var(--second-color);
+}

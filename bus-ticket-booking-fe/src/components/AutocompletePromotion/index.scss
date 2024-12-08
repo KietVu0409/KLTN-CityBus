@@ -1,0 +1,55 @@
+.autocompletePromotion {
+  .MuiInputBase-root {
+    width: 510px !important;
+    padding: 7px 5px !important;
+    border-radius: 8px !important;
+    background-color: #fff;
+    height: 2.1875 !important;
+    &:focus-within {
+      .MuiOutlinedInput-notchedOutline {
+        border: 1px solid !important;
+        border-color: #038edb !important;
+      }
+    }
+    &:hover {
+      .MuiOutlinedInput-notchedOutline {
+        border-color: #afafaf !important;
+      }
+      input {
+        &::placeholder {
+          opacity: 1;
+          color: #373737 !important;
+        }
+      }
+    }
+    .MuiOutlinedInput-notchedOutline {
+      &:hover {
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        border-color: #afafaf !important;
+      }
+    }
+  }
+  input {
+    height: auto;
+    padding: 0 !important;
+    line-height: 5px !important;
+  }
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 16px !important;
+  flex: none !important;
+  order: 1 !important;
+  flex-grow: 0 !important;
+}
+.multiple {
+  .MuiInputBase-root {
+    padding: 0px 5px !important;
+  }
+  .MuiAutocomplete-tag {
+    max-width: calc(100% - 60px) !important;
+  }
+}

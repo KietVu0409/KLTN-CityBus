@@ -1,0 +1,257 @@
+import { Staff } from '../../database/entities';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { RoleEnum } from '../../enums';
+import { EMAIL_REGEX, PHONE_REGEX } from '../../utils/regex.util';
+import { DataSource, Repository } from 'typeorm';
+import { AuthService } from '../auth.service';
+import { AdminLoginDto, AdminRegisterDto } from './dto';
+import { SendOtpDto } from '../customer/dto';
+import * as moment from 'moment';
+import { ConfigService } from '@nestjs/config';
+import { AdminService } from './../../api/admin/admin.service';
+
+@Injectable()
+export class AuthAdminService {
+  private configService = new ConfigService();
+  constructor(
+    @InjectRepository(Staff)
+    private readonly staffRepository: Repository<Staff>,
+    private readonly authService: AuthService,
+    private readonly adminService: AdminService,
+    private readonly dataSource: DataSource,
+  ) {}
+
+  async updateStaffByAdminId(staffId: string, data: any) {
+    return this.staffRepository.update({ id: staffId }, data);
+  }
+
+  async register(userId: string, dto: AdminRegisterDto) {
+    const { phone, email, name, gender } = dto;
+    if (!phone && !email) {
+      throw new BadRequestException('EMAIL_OR_PHONE_REQUIRED');
+    }
+    if (phone) {
+      if (!phone.match(PHONE_REGEX)) {
+        throw new BadRequestException('INVALID_PHONE_NUMBER');
+      }
+    }
+    if (email && !email.match(EMAIL_REGEX)) {
+      throw new BadRequestException('INVALID_EMAIL');
+    }
+
+    if (!userId) {
+      throw new BadRequestException('CREATOR_ID_REQUIRED');
+    }
+
+    // const creator = await this.adminService.findOneById(userId);
+    // if (!creator) {
+    //   throw new BadRequestException('CREATOR_NOT_FOUND');
+    // }
+    // if (!creator.isActive) {
+    //   throw new BadRequestException('CREATOR_IS_INACTIVE');
+    // }
+
+    // const staffPhoneExist = await this.adminService.findOneByPhone(phone);
+    // const staffEmailExist = await this.adminService.findOneByEmail(email);
+    // if (staffPhoneExist || staffEmailExist) {
+    //   throw new BadRequestException('STAFF_ALREADY_EXIST');
+    // }
+
+    const queryRunner = await this.dataSource.createQueryRunner();
+    try {
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+      const passwordHashed = await this.authService.hashData(dto.password);
+
+      const staffCred = new Staff();
+      staffCred.password = passwordHashed;
+      staffCred.fullName = name;
+      staffCred.phone = phone;
+      staffCred.email = email;
+      staffCred.gender = gender;
+      // staffCred.createdBy = userId;
+      staffCred.isActive = true;
+      staffCred.code = '099';
+
+      const staff = await this.staffRepository.save(staffCred);
+      delete staff.createdAt;
+      delete staff.updatedAt;
+      delete staff.deletedAt;
+      delete staff.createdBy;
+      delete staff.updatedBy;
+      delete staff.password;
+
+      await queryRunner.commitTransaction();
+
+      return staff;
+    } catch (err) {
+      console.log(err);
+      await queryRunner.rollbackTransaction();
+      return err;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async login(dto: AdminLoginDto) {
+    const { email, phone } = dto;
+    if (!email && !phone) {
+      throw new BadRequestException('EMAIL_OR_PHONE_REQUIRED');
+    }
+    if (email && !email.match(EMAIL_REGEX)) {
+      throw new BadRequestException('INVALID_EMAIL');
+    }
+    if (phone && !phone.match(PHONE_REGEX)) {
+      throw new BadRequestException('INVALID_PHONE_NUMBER');
+    }
+    let staffExist: Staff;
+    if (email) {
+      staffExist = await this.adminService.findOneByEmail(email, {
+        select: {
+          password: true,
+        },
+      });
+    } else if (phone) {
+      staffExist = await this.adminService.findOneByPhone(phone, {
+        select: {
+          password: true,
+        },
+      });
+    }
+    if (!staffExist || !staffExist?.password) {
+      throw new BadRequestException('INVALID_USERNAME_OR_PASSWORD');
+    }
+    if (!dto.password) {
+      throw new BadRequestException('PASSWORD_IS_REQUIRED');
+    }
+    if (!dto.password?.length || dto.password?.length < 6) {
+      throw new BadRequestException('PASSWORD_IS_MIN_LENGTH_6');
+    }
+
+    const isPasswordMatches = await this.authService.comparePassword(
+      dto.password,
+      staffExist.password,
+    );
+    if (!isPasswordMatches) {
+      throw new BadRequestException('INVALID_USERNAME_OR_PASSWORD');
+    }
+    if (!staffExist.isActive && !staffExist.isFirstLogin) {
+      throw new BadRequestException('USER_NOT_ACTIVE');
+    }
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    try {
+      await queryRunner.startTransaction();
+
+      const tokens = await this.authService.createTokens(
+        staffExist,
+        RoleEnum.STAFF,
+      );
+
+      await this.updateStaffByAdminId(staffExist.id, {
+        refreshToken: tokens.refresh_token,
+        accessToken: tokens.access_token,
+        lastLogin: new Date(),
+      });
+      if (staffExist.isFirstLogin) {
+        staffExist.isFirstLogin = false;
+        await this.dataSource.getRepository(Staff).save(staffExist);
+      }
+
+      await queryRunner.commitTransaction();
+
+      return tokens;
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+      return err;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async logout(staffId: any) {
+    return await this.updateStaffByAdminId(staffId, {
+      refreshToken: null,
+      accessToken: null,
+    });
+  }
+
+  async refreshToken(refreshToken: string) {
+    const staffExist = await this.adminService.findOneByRefreshToken(
+      refreshToken,
+    );
+    if (!staffExist || !staffExist.refreshToken) {
+      throw new UnauthorizedException('UNAUTHORIZED');
+    }
+
+    const tokens = await this.authService.createTokens(
+      staffExist,
+      RoleEnum.STAFF,
+    );
+
+    await this.updateStaffByAdminId(staffExist.id, {
+      refreshToken: tokens.refresh_token,
+      accessToken: tokens.access_token,
+    });
+    return tokens;
+  }
+
+  async sendOtp(dto: SendOtpDto) {
+    const { oldEmail, newEmail, phone } = dto;
+    if (!oldEmail && !phone) {
+      throw new BadRequestException('EMAIL_OR_PHONE_REQUIRED');
+    }
+    let staff: Staff;
+    if (oldEmail) {
+      staff = await this.adminService.findOneByEmail(oldEmail);
+    } else if (phone) {
+      staff = await this.adminService.findOneByPhone(phone);
+    } else {
+      throw new BadRequestException('EMAIL_OR_PHONE_REQUIRED');
+    }
+    if (!staff) {
+      throw new BadRequestException('USER_NOT_FOUND');
+    }
+    const otpCode = Math.floor(100000 + Math.random() * 900000) + '';
+    const otpExpiredTime = this.configService.get('OTP_EXPIRE_MINUTE');
+    const otpExpired = moment().add(otpExpiredTime, 'minutes').toDate();
+
+    const saveCustomer = await this.adminService.updateOtp(
+      staff.id,
+      otpCode,
+      otpExpired,
+    );
+    if (!saveCustomer) {
+      throw new BadRequestException('SEND_OTP_FAILED');
+    }
+    if (oldEmail || newEmail) {
+      await this.authService.sendEmailCodeOtp(
+        newEmail || oldEmail,
+        otpCode,
+        otpExpiredTime,
+      );
+    } else {
+      if (newEmail) {
+        await this.authService.sendEmailCodeOtp(
+          newEmail,
+          otpCode,
+          otpExpiredTime,
+        );
+      } else {
+        await this.authService.sendPhoneCodeOtp(phone, otpCode);
+      }
+    }
+
+    return {
+      staff: {
+        id: staff.id,
+      },
+      message: 'Gửi mã OTP thành công',
+    };
+  }
+}
